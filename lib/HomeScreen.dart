@@ -1,23 +1,21 @@
 import 'dart:developer';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pain/Introduction/GenderSelected.dart';
-import 'package:pain/Introduction/Introduction_Screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:pain/LoginActivity.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-
-
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color.fromRGBO(10, 12, 13, 100),
+        backgroundColor: Color.fromRGBO(10, 12, 13, 1),
         body: ResponsiveSizer(builder: (BuildContext , Orientation , ScreenType ) {
           return Container(
             decoration: BoxDecoration(
@@ -33,8 +31,7 @@ class HomeScreen extends StatelessWidget {
                   padding: EdgeInsets.only(left: 7.5.w,top: 2.8.h,bottom: 16),
                   child: Image.asset("asset/Image/Group_35.png",
                     width: 13.45.w,
-                    height: 2.95.h,
-                    color: Color.fromRGBO(255, 255, 255, 0.8),),
+                    height: 2.95.h,),
                 ),
                 Home_Screen()
               ],
@@ -46,8 +43,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-
-
 class Home_Screen extends StatefulWidget {
   const Home_Screen({Key? key}) : super(key: key);
 
@@ -56,6 +51,7 @@ class Home_Screen extends StatefulWidget {
 }
 
 class _Home_ScreenState extends State<Home_Screen> {
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -85,7 +81,6 @@ class _Home_ScreenState extends State<Home_Screen> {
                         fontFamily: 'RubikLight',
                         fontSize: 19.5.sp,
                       ),)
-
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 7.5.w),
@@ -116,11 +111,12 @@ class _Home_ScreenState extends State<Home_Screen> {
                       Container(
                         padding: EdgeInsets.only(top: 2.3.h),
                         child: ElevatedButton(onPressed: () {
-                          log("${MediaQuery.of(context).size.width} dan ${MediaQuery.of(context).size.height}");
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => LoginActivtyy())
                           );
+
                         },
                           child: Text("Sign in",style:
                           TextStyle(fontSize: 17.05.sp,

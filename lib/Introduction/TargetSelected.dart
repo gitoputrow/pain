@@ -1,13 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pain/Introduction/DataProfile.dart';
+import 'package:pain/Introduction/DataUser.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 
 bool cek = false;
 
 class PageTarget extends StatelessWidget {
-  const PageTarget({Key? key}) : super(key: key);
+
+  String gender;
+  String level;
+  String goal;
+  PageTarget(this.gender,this.level,this.goal);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +25,7 @@ class PageTarget extends StatelessWidget {
             return Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage("asset/Image/bgIntroScreen5.png"),
+                      image: AssetImage("asset/Image/BackgroundIntroduction/bgIntroScreen5.png"),
                       fit: BoxFit.cover
                   )
               ),
@@ -27,7 +34,7 @@ class PageTarget extends StatelessWidget {
                   Container(
                     alignment: Alignment.topCenter,
                     padding: EdgeInsets.only(top: 5.6.h),
-                    child: Image.asset("asset/Image/pagination5.png",width: 44.5.w,height: 2.8.h,),
+                    child: Image.asset("asset/Image/Pagination/pagination5.png",width: 44.5.w,height: 2.8.h,),
                   ),
                   Container(
                     alignment: Alignment.topCenter,
@@ -35,11 +42,11 @@ class PageTarget extends StatelessWidget {
                     child: Text("Choose your target zones!",style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.8),
                       fontFamily: 'PoppinsBoldSemi',
-                      fontSize: 19.7.sp,
+                      fontSize: 19.5.sp,
                     ),
                       textAlign: TextAlign.center,),
                   ),
-                  Target_Selected()
+                  Target_Selected(gender,level,goal)
                 ],
               ),
             );
@@ -51,6 +58,11 @@ class PageTarget extends StatelessWidget {
 
 class Target_Selected extends StatefulWidget {
 
+  String gender;
+  String level;
+  String goal;
+  Target_Selected(this.gender,this.level,this.goal);
+
   @override
   _Target_Selected createState() => _Target_Selected();
 }
@@ -61,6 +73,8 @@ class _Target_Selected extends State<Target_Selected> {
   bool arm = false;
   bool legs = false;
   bool abs = false;
+
+  List<String> muscle = [];
 
   bool cekin(){
     if(chest == true || arm == true || legs == true || abs == true){
@@ -101,20 +115,24 @@ class _Target_Selected extends State<Target_Selected> {
                         );
                         setState(() {
                           chest = true;
+                          muscle.add("Chest");
                         });
                       }
                       else{
                         if (chest == false){
                           setState(() {
                             chest = true;
+                            muscle.add("Chest");
                           });
                         }
                         else{
                           setState(() {
                             chest = false;
+                            muscle.removeWhere((element) => element=="Chest");
                           });
                         }
                       }
+                      log(muscle.toString());
                     },
                     child: Container(
                       padding: EdgeInsets.only(left: 5.7.w),
@@ -148,17 +166,20 @@ class _Target_Selected extends State<Target_Selected> {
                         );
                         setState(() {
                           arm = true;
+                          muscle.add("Arm");
                         });
                       }
                       else{
                         if (arm == false){
                           setState(() {
                             arm = true;
+                            muscle.add("Arm");
                           });
                         }
                         else{
                           setState(() {
                             arm = false;
+                            muscle.removeWhere((element) => element=="Arm");
                           });
                         }
                       }
@@ -195,17 +216,20 @@ class _Target_Selected extends State<Target_Selected> {
                         );
                         setState(() {
                           legs = true;
+                          muscle.add("Legs");
                         });
                       }
                       else{
                         if (legs == false){
                           setState(() {
                             legs = true;
+                            muscle.add("Legs");
                           });
                         }
                         else{
                           setState(() {
                             legs = false;
+                            muscle.removeWhere((element) => element=="Legs");
                           });
                         }
                       }
@@ -242,17 +266,20 @@ class _Target_Selected extends State<Target_Selected> {
                         );
                         setState(() {
                           abs = true;
+                          muscle.add("Abs");
                         });
                       }
                       else{
                         if (abs == false){
                           setState(() {
                             abs = true;
+                            muscle.add("Abs");
                           });
                         }
                         else{
                           setState(() {
                             abs = false;
+                            muscle.removeWhere((element) => element=="Abs");
                           });
                         }
                       }
@@ -291,10 +318,15 @@ class _Target_Selected extends State<Target_Selected> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                padding: EdgeInsets.only(bottom: 5.05.h),
+                padding: EdgeInsets.only(bottom: 6.55.h),
                 child: ElevatedButton(onPressed: () {
 
                   if(cekin() == true){
+                    Data_user data = Data_user();
+                    data.gender = widget.gender;
+                    data.level = widget.level;
+                    data.goal = widget.goal;
+                    data.target = muscle;
                     Navigator.push(
                         context,
                         PageRouteBuilder(
@@ -309,7 +341,7 @@ class _Target_Selected extends State<Target_Selected> {
                                   end: Offset.zero,).animate(animation),
                                 child: child,);
                             },
-                            pageBuilder: (context,animation,animationTime) => PageData()));
+                            pageBuilder: (context,animation,animationTime) => PageData(data)));
                   }
 
                 },

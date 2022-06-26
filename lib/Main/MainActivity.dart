@@ -5,25 +5,37 @@ import 'package:pain/Main/WorkoutPage.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Main_Activity extends StatefulWidget {
-  const Main_Activity({Key? key}) : super(key: key);
+  
+  String id = "";
+  int currentindex = 0;
+  Main_Activity(this.id,this.currentindex);
 
   @override
-  _Main_ActivityState createState() => _Main_ActivityState();
+  _Main_ActivityState createState() => _Main_ActivityState(currentindex);
 }
 
 class _Main_ActivityState extends State<Main_Activity> {
 
-  int _currentIndex = 0;
+  int currentIndex=0;
 
-  final List<Widget> _page = [
-    Home_Page(),
-    Workout_Page(),
-    Profile_Page()
-  ];
+  _Main_ActivityState(this.currentIndex);
+  
+  List<Widget> _page = [];
+  
+  @override
+  void initState() {
+    _page = [
+      Home_Page(widget.id),
+      Workout_Page(widget.id),
+      Profile_Page(widget.id)
+    ];
+    // TODO: implement initState
+    super.initState();
+  }
 
   void OnTappedBar(int Index){
     setState(() {
-      _currentIndex = Index;
+      currentIndex = Index;
     });
   }
 
@@ -33,15 +45,14 @@ class _Main_ActivityState extends State<Main_Activity> {
         child: Scaffold(
           backgroundColor: Color.fromRGBO(10, 12, 13, 1),
           extendBody: false,
-          body: _page[_currentIndex],
+          body: _page[currentIndex],
           bottomNavigationBar: ResponsiveSizer(
             builder: (context, orientation, screenType) {
               return Container(
-                padding: EdgeInsets.only(bottom: 1.5.h),
                 child: BottomNavigationBar(
                   elevation: 0,
                   onTap: OnTappedBar,
-                  currentIndex: _currentIndex,
+                  currentIndex: currentIndex,
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   type: BottomNavigationBarType.fixed,
@@ -49,36 +60,42 @@ class _Main_ActivityState extends State<Main_Activity> {
                   items: [
                     BottomNavigationBarItem(
                         activeIcon: Container(
+                          padding: EdgeInsets.only(bottom: 1.5.h,top: 1.5.h),
                           // padding: EdgeInsets.symmetric(vertical: 15),
                           child: Image.asset("asset/Image/HomeActiveIcon.png",width: 40.w, height: 4.7.h,),
                         ),
                         icon: Container(
+                          padding: EdgeInsets.only(bottom: 1.5.h,top: 1.5.h),
                           // padding: EdgeInsets.symmetric(vertical: 15),
                           child: Image.asset("asset/Image/HomeIcon.png",width: 32.w, height: 3.8.h,),
                         ),
-                        title: Text("a"),
+                        label: "a",
                         backgroundColor: Colors.black),
                     BottomNavigationBarItem(
                         activeIcon: Container(
+                          padding: EdgeInsets.only(bottom: 1.5.h,top: 1.5.h),
                           // padding: EdgeInsets.symmetric(vertical: 15),
                           child: Image.asset("asset/Image/workoutIconActive.png",width: 40.w, height: 4.7.h,),
                         ),
                         icon: Container(
+                          padding: EdgeInsets.only(bottom: 1.5.h,top: 1.5.h),
                           // padding: EdgeInsets.symmetric(vertical: 15),
                           child: Image.asset("asset/Image/workoutIcon.png",width: 32.w, height: 3.8.h,),
                         ),
-                        title: Text("a"),
+                        label: "a",
                         backgroundColor: Colors.black),
                     BottomNavigationBarItem(
                         activeIcon: Container(
+                          padding: EdgeInsets.only(bottom: 1.5.h,top: 1.5.h),
                           // padding: EdgeInsets.symmetric(vertical: 15),
                           child: Image.asset("asset/Image/profilepageIconActive.png",width: 40.w, height: 4.7.h,),
                         ),
                         icon: Container(
+                          padding: EdgeInsets.only(bottom: 1.5.h,top: 1.5.h),
                           // padding: EdgeInsets.symmetric(vertical: 15),
                           child: Image.asset("asset/Image/profilepageIcon.png",width: 32.w, height: 3.8.h,),
                         ),
-                        title: Text("a"),
+                        label: "a",
                         backgroundColor: Colors.black),
                   ],
                 ),

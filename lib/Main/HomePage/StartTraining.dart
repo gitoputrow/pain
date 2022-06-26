@@ -8,8 +8,9 @@ import 'DonePage.dart';
 class Start_Training extends StatefulWidget {
 
   List <String> workoutList = [];
+  String id;
 
-  Start_Training(this.workoutList);
+  Start_Training(this.workoutList,this.id);
 
   @override
   _Start_TrainingState createState() => _Start_TrainingState();
@@ -37,7 +38,10 @@ class _Start_TrainingState extends State<Start_Training> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        color: Color.fromRGBO(196, 196, 196, 1),
+                        image: DecorationImage(
+                            image: AssetImage("asset/Image/WorkoutListGif/${widget.workoutList[index].replaceAll(" ", "")}.gif"),
+                            fit: BoxFit.cover
+                        ),
                       ),
                       child: Container(
                         padding: EdgeInsets.only(left: 5.5.w,top: 3.h),
@@ -53,11 +57,11 @@ class _Start_TrainingState extends State<Start_Training> {
                     ),
                     Container(
                       alignment: Alignment.topRight,
-                      padding: EdgeInsets.only(top: 3.2.h,right: 5.w),
+                      padding: EdgeInsets.only(top: 3.2.h,right: 7.5.w),
                       child: Text(
                         "${index+1} of 4",
                         style: TextStyle(
-                            fontSize: 19.sp,
+                            fontSize: 18.sp,
                             color: Colors.white,
                             fontFamily:'RubikReguler'
                         ),
@@ -99,10 +103,10 @@ class _Start_TrainingState extends State<Start_Training> {
 
                     Container(
                       alignment: Alignment.bottomCenter,
-                      padding: EdgeInsets.only(top: 5.6.h),
+                      padding: EdgeInsets.only(top: 5.7.h,left: 24.w,right: 24.w),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Container(
                             child: ElevatedButton(onPressed: () {
@@ -110,7 +114,7 @@ class _Start_TrainingState extends State<Start_Training> {
                               if (index == 3){
                                 Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => Done_Page()));
+                                    MaterialPageRoute(builder: (context) => Done_Page(widget.id)));
                               }
 
                               else{
@@ -127,15 +131,15 @@ class _Start_TrainingState extends State<Start_Training> {
                               }
 
                             },
-                              child: Text("CONTINUE",style:
-                              TextStyle(fontSize: 16.sp,
+                              child: Text("Continue",style:
+                              TextStyle(fontSize: 17.05.sp,
                                   fontFamily: 'RubikSemiBold',
                                   color: Colors.white  ),),
                               style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30)
                                   ),
-                                  padding: EdgeInsets.symmetric(vertical: 2.h,horizontal: 23.w),
+                                  padding: EdgeInsets.symmetric(vertical: 2.h,),
                                   primary: Color.fromRGBO(170, 5, 27, 1),
                                   onPrimary: Color.fromRGBO(0, 0, 0, 1.0)
                               ),),

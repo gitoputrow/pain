@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +10,9 @@ import 'package:pain/Main/HomePage/WorkoutList.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Home_Page extends StatefulWidget {
-  const Home_Page({Key? key}) : super(key: key);
+
+  String id;
+  Home_Page(this.id);
 
   @override
   _Home_PageState createState() => _Home_PageState();
@@ -85,38 +89,642 @@ class _Home_PageState extends State<Home_Page> {
     "CardioPic"
   ];
 
-  int activePage = 0;
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
 
+  List <String> Muscle = [];
+  String level = "";
+  String goal  = "";
+
+  List<String> daySplit = [];
+  List<String> workoutSplit = [];
   String namedays = "";
 
   var day = DateFormat('EEEE').format(DateTime.now());
 
-  String setnamedays(){
-    if (day.toString() == "Monday"){
-      return "Arm";
+  String username = "";
+
+  data() async {
+    log(widget.id);
+    final data = await ref.child(widget.id).get();
+    for (var muscle in data.child("Muscle").children){
+      var muscletarget = muscle.value.toString();
+      log(muscletarget);
+      setState(() {
+        Muscle.add(muscletarget);
+      });
     }
-    else if (day.toString() == "Tuesday"){
-      return "Chest";
+    Muscle.sort();
+    setState(() {
+      username = data.child("user").value.toString();
+      level = data.child("level").value.toString();
+      goal = data.child("goal").value.toString();
+    });
+    if (level == "new"){
+      setState(() {
+        daySplit = [
+          "Monday",
+          "Wednesday",
+          "Friday"
+        ];
+      });
+      if (goal == "build muscle"){
+        if (Muscle.length == 1){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[0],
+            Muscle[0],
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else {
+            namedays = "is Rest Day";
+          }
+        }
+        else if (Muscle.length == 2){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            "Full Body",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 3){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            Muscle[2],
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 4){
+          workoutSplit = [
+            "${Muscle[0]} and ${Muscle[1]}",
+            "${Muscle[2]} and ${Muscle[3]}",
+            "Full Body",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+      }
+      else if (goal == "burn fat"){
+        if (Muscle.length == 1){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[0],
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 2){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 3){
+          workoutSplit = [
+            "${Muscle[0]} and ${Muscle[1]}",
+            Muscle[2],
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 4){
+          workoutSplit = [
+            "${Muscle[0]} and ${Muscle[1]}",
+            "${Muscle[2]} and ${Muscle[3]}",
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+      }
     }
-    else if (day.toString() == "Wednesday"){
-      return "Abs";
+    else if (level == "pro"){
+      setState(() {
+        daySplit = [
+          "Monday",
+          "Wednesday",
+          "Friday",
+          "Saturday"
+        ];
+      });
+      if (goal == "build muscle"){
+        if (Muscle.length == 1){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[0],
+            "Full Body",
+            "Full Body",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 2){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            "${Muscle[0]} and ${Muscle[1]}",
+            "Full Body",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 3){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            Muscle[2],
+            "Full Body"
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 4){
+          workoutSplit = [
+            "${Muscle[0]} and ${Muscle[1]}",
+            "${Muscle[2]} and ${Muscle[3]}",
+            "Full Body",
+            "Full Body"
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+      }
+      else if (goal == "burn fat"){
+        if (Muscle.length == 1){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[0],
+            Muscle[0],
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 2){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            "${Muscle[0]} and ${Muscle[1]}",
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 3){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            Muscle[2],
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 4){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            "${Muscle[2]} and ${Muscle[3]}",
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+      }
     }
-    else if (day.toString() == "Thursday"){
-      return "Legs";
+    else if (level == "master"){
+      setState(() {
+        daySplit = [
+          "Monday",
+          "Tuesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ];
+      });
+      if (goal == "build muscle"){
+        if (Muscle.length == 1){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[0],
+            Muscle[0],
+            "Full Body",
+            "Full Body",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else if (day.toString() == daySplit[4]){
+            namedays = "'s Goal is for ${workoutSplit[4]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 2){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            "${Muscle[0]} and ${Muscle[1]}",
+            "${Muscle[0]} and ${Muscle[1]}",
+            "Full Body",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else if (day.toString() == daySplit[4]){
+            namedays = "'s Goal is for ${workoutSplit[4]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 3){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            Muscle[2],
+            "Full Body",
+            "Full Body"
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else if (day.toString() == daySplit[4]){
+            namedays = "'s Goal is for ${workoutSplit[4]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 4){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            Muscle[2],
+            Muscle[3],
+            "Full Body"
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else if (day.toString() == daySplit[4]){
+            namedays = "'s Goal is for ${workoutSplit[4]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+      }
+      else if (goal == "burn fat"){
+        if (Muscle.length == 1){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[0],
+            "Cardio",
+            Muscle[0],
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else if (day.toString() == daySplit[4]){
+            namedays = "'s Goal is for ${workoutSplit[4]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 2){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            "Cardio",
+            "${Muscle[0]} and ${Muscle[1]}",
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else if (day.toString() == daySplit[4]){
+            namedays = "'s Goal is for ${workoutSplit[4]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 3){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            "Cardio",
+            Muscle[2],
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else if (day.toString() == daySplit[4]){
+            namedays = "'s Goal is for ${workoutSplit[4]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+        else if (Muscle.length == 4){
+          workoutSplit = [
+            Muscle[0],
+            Muscle[1],
+            "Cardio",
+            "${Muscle[2]} and ${Muscle[3]}",
+            "Cardio",
+          ];
+          if (day.toString() == daySplit[0]){
+            namedays = "'s Goal is for ${workoutSplit[0]} Workout";
+          }
+          else if (day.toString() == daySplit[1]){
+            namedays = "'s Goal is for ${workoutSplit[1]} Workout";
+          }
+          else if (day.toString() == daySplit[2]){
+            namedays = "'s Goal is for ${workoutSplit[2]} Workout";
+          }
+          else if (day.toString() == daySplit[3]){
+            namedays = "'s Goal is for ${workoutSplit[3]} Workout";
+          }
+          else if (day.toString() == daySplit[4]){
+            namedays = "'s Goal is for ${workoutSplit[4]} Workout";
+          }
+          else {
+            namedays = " is Rest Day";
+          }
+        }
+      }
     }
-    else if (day.toString() == "Friday"){
-      return "Full Body";
-    }
-    else if (day.toString() == "Saturday"){
-      return "Cardio";
-    }
-    return "";
+    log(Muscle.toString());
   }
+
+  int activePage = 0;
+
+
 
   @override
   void initState() {
     // TODO: implement initState
-    setnamedays();
+    data();
+    log(Muscle.toString());
     super.initState();
   }
 
@@ -147,11 +755,11 @@ class _Home_PageState extends State<Home_Page> {
                                 ),),
                               Container(
                                 padding: EdgeInsets.only(top: 0.8.h),
-                                child: Text("Hi! mhmmdnugroh",
+                                child: Text("Hi! $username",
                                   style: TextStyle(
                                       color: Color.fromRGBO(255, 255, 255, 1),
                                       fontFamily: 'RubikSemiBold',
-                                      fontSize: 19.85.sp
+                                      fontSize: 21.sp
                                   ),),
                               ),
                             ],
@@ -166,16 +774,16 @@ class _Home_PageState extends State<Home_Page> {
                     Container(
                       alignment: Alignment.topLeft,
                       padding: EdgeInsets.only(top: 1.4.h,left: 7.5.w),
-                      child: Text("Today’s Goal is for ${setnamedays()} Workout",
+                      child: Text("Today$namedays",
                         style: TextStyle(
                             color: Color.fromRGBO(255, 255, 255, 1),
                             fontFamily: 'PoppinsRegular',
-                            fontSize: 15.47.sp
+                            fontSize: 15.5.sp
                         ),),
                     ),
                     Container(
                       width: 450.w,
-                      height: 84.4.h,
+                      height: 85.3.h,
                       padding: EdgeInsets.only(top: 3.h),
                       child: Container(
                           child: PageView(
@@ -183,59 +791,70 @@ class _Home_PageState extends State<Home_Page> {
                             controller: PageController(viewportFraction: 0.87,initialPage: 0),
                             padEnds: true,
                             children: [
-                              GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[0]}","${gambarlist[0]}",workoutArm)));
-                                },
-                                child: carausel(workoutlist[0], days[0], gambarlist[0]),
-                              ),
+                              for(var i = 0; i < daySplit.length; i++)
+                                GestureDetector(
+                                  onTap: (){
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => Workout_List(workoutSplit[i],"${workoutSplit[i].replaceAll(' ', '')}Pic",widget.id)));
+                                  },
+                                  child: carausel(workoutSplit[i], daySplit[i], "${workoutSplit[i].replaceAll(' ', '')}Pic"),
+                                ),
 
-                              GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[1]}","${gambarlist[1]}",workoutChest)));
-                                },
-                                child: carausel(workoutlist[1], days[1], gambarlist[1]),
-                              ),
 
-                              GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[2]}","${gambarlist[2]}",workoutAbs)));
-                                },
-                                child: carausel(workoutlist[2], days[2], gambarlist[2]),
-                              ),
-
-                              GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[3]}","${gambarlist[3]}",workoutLegs)));
-                                },
-                                child: carausel(workoutlist[3], days[3], gambarlist[3]),
-                              ),
-
-                              GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[4]}","${gambarlist[4]}",workoutFullbody)));
-                                },
-                                child: carausel(workoutlist[4], days[4], gambarlist[4]),
-                              ),
-
-                              GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[5]}","${gambarlist[5]}",workoutCardio)));
-                                },
-                                child: carausel(workoutlist[5], days[5], gambarlist[5]),
-                              ),
+                              // GestureDetector(
+                              //   onTap: (){
+                              //     Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[0]}","${gambarlist[0]}",workoutArm)));
+                              //   },
+                              //   child: carausel(workoutlist[0], days[0], gambarlist[0]),
+                              // ),
+                              //
+                              // GestureDetector(
+                              //   onTap: (){
+                              //     Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[1]}","${gambarlist[1]}",workoutChest)));
+                              //   },
+                              //   child: carausel(workoutlist[1], days[1], gambarlist[1]),
+                              // ),
+                              //
+                              // GestureDetector(
+                              //   onTap: (){
+                              //     Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[2]}","${gambarlist[2]}",workoutAbs)));
+                              //   },
+                              //   child: carausel(workoutlist[2], days[2], gambarlist[2]),
+                              // ),
+                              //
+                              // GestureDetector(
+                              //   onTap: (){
+                              //     Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[3]}","${gambarlist[3]}",workoutLegs)));
+                              //   },
+                              //   child: carausel(workoutlist[3], days[3], gambarlist[3]),
+                              // ),
+                              //
+                              // GestureDetector(
+                              //   onTap: (){
+                              //     Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[4]}","${gambarlist[4]}",workoutFullbody)));
+                              //   },
+                              //   child: carausel(workoutlist[4], days[4], gambarlist[4]),
+                              // ),
+                              //
+                              // GestureDetector(
+                              //   onTap: (){
+                              //     Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(builder: (context) => Workout_List("${workoutlist[5]}","${gambarlist[5]}",workoutCardio)));
+                              //   },
+                              //   child: carausel(workoutlist[5], days[5], gambarlist[5]),
+                              // ),
                             ],
                           )
                       ),
@@ -264,7 +883,7 @@ class carausel extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         image: DecorationImage(
-            image: AssetImage("asset/Image/$gambar.png"),
+            image: AssetImage("asset/Image/CarouselPic/$gambar.png"),
             fit: BoxFit.cover
         ),
       ),
@@ -277,7 +896,7 @@ class carausel extends StatelessWidget {
             Container(
               child: Text("$days",
                 style: TextStyle(
-                    fontSize: 23.45.sp,
+                    fontSize: 23.sp,
                     fontFamily: 'RubikSemiBold',
                     color: Colors.white
                 ),),

@@ -1,21 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:developer';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:getwidget/components/card/gf_card.dart';
-import 'package:getwidget/components/radio/gf_radio.dart';
-import 'package:getwidget/size/gf_size.dart';
-import 'package:getwidget/types/gf_radio_type.dart';
 import 'package:pain/HomeScreen.dart';
-import 'package:pain/Introduction/FragmentValue.dart';
-import 'package:pain/Introduction/Introduction_Screen.dart';
+import 'package:pain/Introduction/DataUser.dart';
 import 'package:pain/Introduction/PhysicallySelected.dart';
 import 'package:pain/LoadingScreen.dart';
 import 'package:pain/splashscreen.dart';
 
 
 class PageCreate extends StatelessWidget {
-  const PageCreate({Key? key}) : super(key: key);
+
+  Data_user dataUser = Data_user();
+  Data_profile dataProfile = Data_profile();
+
+  PageCreate(this.dataUser,this.dataProfile);
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +27,15 @@ class PageCreate extends StatelessWidget {
             designSize: Size(423,897),
             minTextAdapt: true,
             splitScreenMode: true,
-            builder: (BuildContext context) {
+            builder: (BuildContext context,widget) {
               return Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage("asset/Image/bgIntroScreen7.png"),
+                        image: AssetImage("asset/Image/BackgroundIntroduction/bgIntroScreen7.png"),
                         fit: BoxFit.cover
                     )
                 ),
-                child: Create_Account(),
+                child: Create_Account(dataUser,dataProfile),
               );
             },),
         ));
@@ -44,11 +45,22 @@ class PageCreate extends StatelessWidget {
 
 class Create_Account extends StatefulWidget {
 
+  Data_user dataUser = Data_user();
+  Data_profile dataProfile = Data_profile();
+
+  Create_Account(this.dataUser,this.dataProfile);
+
   @override
   _Create_AccountState createState() => _Create_AccountState();
 }
 
 class _Create_AccountState extends State<Create_Account> {
+
+  Data_account dataAccout = Data_account();
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+
 
   final textEmail = TextEditingController();
   final textUser = TextEditingController();
@@ -63,13 +75,77 @@ class _Create_AccountState extends State<Create_Account> {
   bool visiblepass = false;
   bool visibleconfirmpass = false;
 
-  bool cek(){
+  bool cek(email){
     if (textemail == false || textuser== false ||
         textpass== false || textconfirmpass== false){
       return false;
     }
     else {
+      if (emailValid(email) == true && textPass.text.length > 5 && textConfirmPass.text == textPass.text){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+  
+  bool emailChecker = true;
+
+  checkIfEmailInUse(String emailAddress) async {
+    try {
+      // Fetch sign-in methods for the email address
+      final list = await _auth.fetchSignInMethodsForEmail(emailAddress);
+
+      // In case list is not empty
+      if (list.isNotEmpty) {
+        // Return true because there is an existing
+        // user using the email address
+        setState(() {
+          emailChecker = true;
+        });
+      } else {
+        // Return false because email adress is not in use
+        setState(() {
+          emailChecker = false;
+        });
+      }
+    } catch (error) {
+      // Handle error
+      // ...
+      setState(() {
+        emailChecker = true;
+      });
+    }
+  }
+  DatabaseReference ref = FirebaseDatabase().ref();
+
+  List<String> usernameChecker = [];
+
+
+  database() async {
+    final children = await ref.get();
+    for (var child in children.children){
+      String username_ = child.child("user").value.toString();
+      log(username_);
+      usernameChecker.add(username_);
+    }
+  }
+
+  bool emailError(email){
+    if (emailValid(email) == false && email.toString().isNotEmpty){
       return true;
+    }
+    else{
+      return false;
+    }
+  }
+  bool userError(String user){
+    if(user.isNotEmpty && user.contains(" ")){
+      return true;
+    }
+    else{
+      return false;
     }
   }
 
@@ -79,6 +155,17 @@ class _Create_AccountState extends State<Create_Account> {
         .hasMatch(email);
   }
 
+  Map muscledata = {};
+  @override
+  void initState() {
+    for (var i = 0; i < widget.dataUser.target.length;i++){
+      muscledata["taget${i+1}"] = widget.dataUser.target[i];
+    }
+    // TODO: implement initState
+    database();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -86,15 +173,15 @@ class _Create_AccountState extends State<Create_Account> {
         Container(
           alignment: Alignment.topCenter,
           padding: EdgeInsets.only(top: 4.5.h),
-          child: Image.asset("asset/Image/pagination7.png",width: 188.w,height: 24.h,),
+          child: Image.asset("asset/Image/Pagination/pagination7.png",width: 188.w,height: 24.h,),
         ),
         Container(
           alignment: Alignment.topCenter,
-          margin: EdgeInsets.only(top: 30.h),
+          margin: EdgeInsets.only(top: 32.h),
           child: Text("Create Account",style: TextStyle(
             color: Color.fromRGBO(255, 255, 255, 0.8),
-            fontFamily: 'PoppinsMedium',
-            fontSize: 24.sp,
+            fontFamily: 'PoppinsBoldSemi',
+            fontSize: 24.5.sp,
           ),),
         ),
 
@@ -103,8 +190,8 @@ class _Create_AccountState extends State<Create_Account> {
           padding: EdgeInsets.only(top: 8.h),
           child: Text("Set your Username & Password\nso you can keep your Account ",style: TextStyle(
             color: Color.fromRGBO(255, 255, 255, 0.8),
-            fontFamily: 'PoppinsRegular',
-            fontSize: 20.sp,
+            fontFamily: 'RubikLight',
+            fontSize: 23.sp,
           ),
             textAlign: TextAlign.center,),
         ),
@@ -118,6 +205,7 @@ class _Create_AccountState extends State<Create_Account> {
                     keyboardType: TextInputType.emailAddress,
                     controller: textEmail,
                     onChanged: (text){
+                      checkIfEmailInUse(textEmail.text);
                       setState(() {
                         if (textEmail.text.isEmpty){
                           textemail = false;
@@ -134,7 +222,7 @@ class _Create_AccountState extends State<Create_Account> {
                         borderRadius: BorderRadius.all(Radius.circular(16.0)),
                         borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.9), width: 1.w),
                       ),
-                      errorText: emailValid(textEmail.text) == false && textEmail.text.isNotEmpty ? "your email is not valid" : null,
+                      errorText: emailError(textEmail.text) == true ? "your email is not valid" : null,
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16.0)),
                         borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.9), width: 4.5.w),
@@ -143,7 +231,8 @@ class _Create_AccountState extends State<Create_Account> {
                       hintText: "Insert Your Email",
                       hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
-                          fontSize: 17.sp),
+                          fontFamily: 'RubikMedium',
+                          fontSize: 16.sp),
                       prefixIcon: Container(
                         padding: EdgeInsets.only(left: 12.w,right: 8.w),
                         child: Image.asset("asset/Image/emaiIcon.png",scale: 14.r,),
@@ -162,7 +251,7 @@ class _Create_AccountState extends State<Create_Account> {
                     ),
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.8),
-                      fontSize: 18.sp,
+                      fontSize: 16.sp,
                     ),
                   ),
                 ),
@@ -188,6 +277,7 @@ class _Create_AccountState extends State<Create_Account> {
                       hintText: "Insert Your Username",
                       hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
+                          fontFamily: 'RubikMedium',
                           fontSize: 17.sp),
                       prefixIcon: Container(
                         padding: EdgeInsets.only(left: 12.w,right: 8.w),
@@ -203,6 +293,15 @@ class _Create_AccountState extends State<Create_Account> {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.9), width: 2.w),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.9), width: 1.w),
+                      ),
+                      errorText: userError(textUser.text) == true ? "Username can't contain any space" : null,
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.9), width: 4.5.w),
                       ),
                     ),
                     style: TextStyle(
@@ -244,7 +343,8 @@ class _Create_AccountState extends State<Create_Account> {
                       hintText: "Set Your Password",
                       hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
-                          fontSize: 17.sp),
+                          fontFamily: 'RubikMedium',
+                          fontSize: 16.sp),
                       prefixIcon: Container(
                         padding: EdgeInsets.only(left: 12.w,right: 8.w),
                         child: Image.asset("asset/Image/passIcon.png",scale: 15.r,),
@@ -281,7 +381,7 @@ class _Create_AccountState extends State<Create_Account> {
                     ),
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.8),
-                      fontSize: 18.sp,
+                      fontSize: 16.sp,
                     ),
                   ),
                 ),
@@ -304,11 +404,22 @@ class _Create_AccountState extends State<Create_Account> {
                       }
                     },
                     decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.9), width: 1.w),
+                      ),
                       contentPadding: EdgeInsets.symmetric(vertical: 24.h,horizontal: 24.w),
                       hintText: "Confirm Your password",
                       hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
-                          fontSize: 17.sp),
+                          fontFamily: 'RubikMedium',
+                          fontSize: 16.sp),
+                      errorText: textConfirmPass.text != textPass.text && textConfirmPass.text.isNotEmpty ?
+                      "your password doesn't match" : null,
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.9), width: 4.5.w),
+                      ),
                       prefixIcon: Container(
                         padding: EdgeInsets.only(left: 12.w,right: 8.w),
                         child: Image.asset("asset/Image/passIcon.png",scale: 15.r,),
@@ -345,7 +456,7 @@ class _Create_AccountState extends State<Create_Account> {
                     ),
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.8),
-                      fontSize: 18.sp,
+                      fontSize: 16.sp,
                     ),
                   ),
                 ),
@@ -354,7 +465,7 @@ class _Create_AccountState extends State<Create_Account> {
         ),
         Container(
 
-          padding: EdgeInsets.only(left: 32.w,right: 32.w,top: 164.h),
+          padding: EdgeInsets.only(left: 32.w,right: 32.w,top: 162.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -362,36 +473,107 @@ class _Create_AccountState extends State<Create_Account> {
               Container(
                 padding: EdgeInsets.only(bottom: 40.h),
                 child: ElevatedButton(onPressed: () {
-                  if (cek() == true){
-                    Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                            transitionDuration: Duration(milliseconds: 450),
-                            reverseTransitionDuration: Duration(milliseconds: 0),
-                            transitionsBuilder:
-                                (context,animation,animationTime,child){
-                              animation = CurvedAnimation(parent: animation, curve: Curves.ease);
-                              return SlideTransition(
-                                position: Tween(
-                                  begin: Offset(1,0),
-                                  end: Offset.zero,).animate(animation),
-                                child: child,);
-                            },
-                            pageBuilder: (context,animation,animationTime) => Loading_Screen()));
+                  if (cek(textEmail.text) == true){
+                    if (emailError(textEmail.text) == false && userError(textUser.text) == false && textConfirmPass.text == textPass.text){
+                      log(emailChecker.toString());
+                      if (emailChecker == false){
+                        if (usernameChecker.contains(textUser.text)){
+                          Fluttertoast.showToast(
+                              msg: "Username is already in use",  // message
+                              toastLength: Toast.LENGTH_SHORT, // length
+                              gravity: ToastGravity.BOTTOM,    // location
+                              timeInSecForIosWeb: 1               // duration
+                          );
+                        }
+                        else{
+                          dataAccout.email = textEmail.text;
+                          dataAccout.pass = textPass.text;
+                          dataAccout.username = textUser.text;
+                          String id = ref.push().key.toString();
+
+                          Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                  transitionDuration: Duration(milliseconds: 450),
+                                  reverseTransitionDuration: Duration(milliseconds: 0),
+                                  transitionsBuilder:
+                                      (context,animation,animationTime,child){
+                                    animation = CurvedAnimation(parent: animation, curve: Curves.ease);
+                                    return SlideTransition(
+                                      position: Tween(
+                                        begin: Offset(1,0),
+                                        end: Offset.zero,).animate(animation),
+                                      child: child,);
+                                  },
+                                  pageBuilder: (context,animation,animationTime) =>
+                                      Loading_Screen(id)));
+
+                          _auth.createUserWithEmailAndPassword(
+                              email: textEmail.text,
+                              password: textPass.text).whenComplete(()
+                          => ref.child(id).set({
+                            "name" : widget.dataProfile.name,
+                            "user" : dataAccout.username,
+                            "email" : dataAccout.email,
+                            "pass" : dataAccout.pass,
+                            "age" : widget.dataProfile.age,
+                            "height" : widget.dataProfile.height,
+                            "weight" : widget.dataProfile.weight,
+                            "goal" : widget.dataUser.goal,
+                            "level" : widget.dataUser.level
+                          }).whenComplete(() => ref.child(id).child("Muscle").set(
+                              muscledata)).whenComplete(() =>
+                              ref.child(id).child("Challange").set({
+                                "FullBodyBeginner" : 0,
+                                "AbsBeginner" : 0,
+                                "TricepsBeginner" : 0,
+                                "BicepsBeginner" : 0,
+                                "ChestBeginner" : 0,
+                                "LegsBeginner" : 0,
+                                "CardioBeginner" : 0,
+                                "FullBodyIntermediate" : 0,
+                                "AbsIntermediate" : 0,
+                                "TricepsIntermediate" : 0,
+                                "BicepsIntermediate" : 0,
+                                "ChestIntermediate" : 0,
+                                "LegsIntermediate" : 0,
+                                "CardioIntermediate" : 0,
+                              }))).whenComplete(() => _auth.signInWithEmailAndPassword(
+                              email: textEmail.text,
+                              password: textPass.text));
+                        }
+                      }
+                      else {
+                        Fluttertoast.showToast(
+                            msg: "Email is already in use",  // message
+                            toastLength: Toast.LENGTH_SHORT, // length
+                            gravity: ToastGravity.BOTTOM,    // location
+                            timeInSecForIosWeb: 1               // duration
+                        );
+                      }
+                    }
+                    else{
+                      Fluttertoast.showToast(
+                          msg: "Complete the Error Message",  // message
+                          toastLength: Toast.LENGTH_SHORT, // length
+                          gravity: ToastGravity.BOTTOM,    // location
+                          timeInSecForIosWeb: 1               // duration
+                      );
+                    }
                   }
                 },
 
                   child: Text("Let’s Get Fit",style:
                   TextStyle(fontSize: 18.sp,
                       fontFamily: 'RubikMedium',
-                      color: cek() == true ? Colors.white : Color.fromRGBO(255, 255, 255, 0.4)),),
+                      color: cek(textEmail.text) == true ? Colors.white : Color.fromRGBO(255, 255, 255, 0.4)),),
                   style: ElevatedButton.styleFrom(
-                    splashFactory: cek() == false ? NoSplash.splashFactory : null,
+                    splashFactory: cek(textEmail.text) == false ? NoSplash.splashFactory : null,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)
                     ),
                     padding: EdgeInsets.symmetric(vertical: 20.h),
-                    primary: cek()
+                    primary: cek(textEmail.text)
                         == false ? Color.fromRGBO(205, 2, 27, 0.5) : Color.fromRGBO(170, 5, 27, 1),
                     onPrimary: Color.fromRGBO(0, 0, 0, 1.0),
                   ),),

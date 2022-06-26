@@ -8,8 +8,9 @@ class Prepare_page extends StatefulWidget {
 
   String workout = "";
   List <String> workoutList = [];
+  String id;
 
-  Prepare_page(this.workout,this.workoutList);
+  Prepare_page(this.workout,this.workoutList,this.id);
 
   @override
   _Prepare_pageState createState() => _Prepare_pageState();
@@ -34,7 +35,7 @@ class _Prepare_pageState extends State<Prepare_page> with SingleTickerProviderSt
     Timer(Duration(milliseconds: 11150), (){
       Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Start_Training(widget.workoutList)));
+          MaterialPageRoute(builder: (context) => Start_Training(widget.workoutList,widget.id)));
     });
     timer = Timer.periodic(Duration(seconds: 1), (_){
       setState(() {
@@ -84,6 +85,7 @@ class _Prepare_pageState extends State<Prepare_page> with SingleTickerProviderSt
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
+                      padding: EdgeInsets.only(top: 1.8.h),
                       alignment: Alignment.center,
                       child: Text(
                         "Prepare your self",
@@ -115,7 +117,7 @@ class _Prepare_pageState extends State<Prepare_page> with SingleTickerProviderSt
                           "00:10",
                           style: TextStyle(
                               fontFamily: 'RubikMedium',
-                              fontSize: 25.5.sp,
+                              fontSize: 27.sp,
                               color: Color.fromRGBO(205, 5, 27, 1)
                           ),
                         ),
@@ -129,7 +131,7 @@ class _Prepare_pageState extends State<Prepare_page> with SingleTickerProviderSt
                           "00:0$second",
                           style: TextStyle(
                               fontFamily: 'RubikMedium',
-                              fontSize: 25.5.sp,
+                              fontSize: 27.sp,
                               color: Color.fromRGBO(205, 5, 27, 1)
                           ),
                         ),

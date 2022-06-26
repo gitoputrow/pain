@@ -3,20 +3,18 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:getwidget/components/card/gf_card.dart';
-import 'package:getwidget/components/radio/gf_radio.dart';
-import 'package:getwidget/size/gf_size.dart';
-import 'package:getwidget/types/gf_radio_type.dart';
 import 'package:pain/HomeScreen.dart';
 import 'package:pain/Introduction/CreateAccount.dart';
-import 'package:pain/Introduction/FragmentValue.dart';
-import 'package:pain/Introduction/Introduction_Screen.dart';
 import 'package:pain/Introduction/PhysicallySelected.dart';
 import 'package:pain/splashscreen.dart';
 
+import 'DataUser.dart';
+
 
 class PageData extends StatelessWidget {
-  const PageData({Key? key}) : super(key: key);
+
+  Data_user data = Data_user();
+  PageData(this.data);
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +25,15 @@ class PageData extends StatelessWidget {
             designSize: Size(423,897),
             minTextAdapt: true,
             splitScreenMode: true,
-            builder: (BuildContext context) {
+            builder: (BuildContext context,widget) {
               return Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage("asset/Image/bgIntroScreen6.png"),
+                        image: AssetImage("asset/Image/BackgroundIntroduction/bgIntroScreen6.png"),
                         fit: BoxFit.cover
                     )
                 ),
-                child: Data_Profile(),
+                child: Data_Profile(data),
               );
             },)
         ));
@@ -44,6 +42,9 @@ class PageData extends StatelessWidget {
 
 
 class Data_Profile extends StatefulWidget {
+
+  Data_user dataUser = Data_user();
+  Data_Profile(this.dataUser);
 
   @override
   _Data_ProfileState createState() => _Data_ProfileState();
@@ -80,25 +81,25 @@ class _Data_ProfileState extends State<Data_Profile> {
         Container(
           alignment: Alignment.topCenter,
           padding: EdgeInsets.only(top: 4.5.h),
-          child: Image.asset("asset/Image/pagination6.png",width: 188.w,height: 24.h,),
+          child: Image.asset("asset/Image/Pagination/pagination6.png",width: 188.w,height: 24.h,),
         ),
         Container(
           alignment: Alignment.topCenter,
-          margin: EdgeInsets.only(top: 30.h),
+          margin: EdgeInsets.only(top: 32.h),
           child: Text("Profile Details",style: TextStyle(
             color: Color.fromRGBO(255, 255, 255, 0.8),
             fontFamily: 'PoppinsBoldSemi',
-            fontSize: 24.sp,
+            fontSize: 24.5.sp,
           ),),
         ),
 
         Container(
           alignment: Alignment.topCenter,
-          padding: EdgeInsets.only(top: 8.h),
+          padding: EdgeInsets.only(top: 4.h),
           child: Text("Enter your parameters to get a\npersonalized plan",style: TextStyle(
             color: Color.fromRGBO(255, 255, 255, 0.8),
-            fontFamily: 'PoppinsRegular',
-            fontSize: 20.sp,
+            fontFamily: 'RubikLight',
+            fontSize: 23.sp,
           ),
             textAlign: TextAlign.center,),
         ),
@@ -128,6 +129,7 @@ class _Data_ProfileState extends State<Data_Profile> {
                       hintText: "Insert Your Name",
                       hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
+                          fontFamily: 'RubikMedium',
                           fontSize: 17.sp),
                       prefixIcon: Container(
                         padding: EdgeInsets.only(left: 12.w,right: 8.w),
@@ -178,7 +180,8 @@ class _Data_ProfileState extends State<Data_Profile> {
                       ),
                       hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
-                          fontSize: 17.sp),
+                          fontSize: 17.sp,
+                          fontFamily: 'RubikMedium',),
                       prefixIcon: Container(
                         padding: EdgeInsets.only(left: 12.w,right: 8.w),
                         child: Image.asset("asset/Image/ageIcon.png",scale: 14.r,),
@@ -231,7 +234,8 @@ class _Data_ProfileState extends State<Data_Profile> {
                       hintText: "Current Weight",
                       hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
-                          fontSize: 17.sp),
+                          fontSize: 17.sp,
+                          fontFamily: 'RubikMedium',),
                       prefixIcon: Container(
                         padding: EdgeInsets.only(left: 12.w,right: 8.w),
                         child: Image.asset("asset/Image/weightIcon.png",scale: 14.r,),
@@ -283,7 +287,8 @@ class _Data_ProfileState extends State<Data_Profile> {
                       hintText: "Target Weight",
                       hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
-                          fontSize: 17.sp),
+                          fontSize: 17.sp,
+                          fontFamily: 'RubikMedium',),
                       prefixIcon: Container(
                         padding: EdgeInsets.only(left: 12.w,right: 8.w),
                         child: Image.asset("asset/Image/TargetIcon.png",scale: 14.r,),
@@ -335,6 +340,7 @@ class _Data_ProfileState extends State<Data_Profile> {
                       hintText: "Height",
                       hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
+                          fontFamily: 'RubikMedium',
                           fontSize: 17.sp),
                       prefixIcon: Container(
                         padding: EdgeInsets.only(left: 12.w,right: 8.w),
@@ -370,7 +376,7 @@ class _Data_ProfileState extends State<Data_Profile> {
         ),
         Container(
 
-          padding: EdgeInsets.only(left: 32.w,right: 32.w,top: 71.h),
+          padding: EdgeInsets.only(left: 32.w,right: 32.w,top: 67.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -379,6 +385,12 @@ class _Data_ProfileState extends State<Data_Profile> {
                 padding: EdgeInsets.only(bottom: 40.h),
                 child: ElevatedButton(onPressed: () {
                   if (cek() == true){
+                    Data_profile dataProfile = Data_profile();
+                    log(widget.dataUser.toString());
+                    dataProfile.name = textName.text;
+                    dataProfile.age = textAge.text;
+                    dataProfile.weight = textWeight.text;
+                    dataProfile.height = textHeight.text;
                     Navigator.push(
                         context,
                         PageRouteBuilder(
@@ -393,7 +405,7 @@ class _Data_ProfileState extends State<Data_Profile> {
                                   end: Offset.zero,).animate(animation),
                                 child: child,);
                             },
-                            pageBuilder: (context,animation,animationTime) => PageCreate()));
+                            pageBuilder: (context,animation,animationTime) => PageCreate(widget.dataUser,dataProfile)));
                   }
                 },
 

@@ -3,8 +3,14 @@ import 'dart:async';
 
 import 'package:pain/Main/MainActivity.dart';
 
+import 'Introduction/DataUser.dart';
+
 class Loading_Screen extends StatefulWidget {
-  const Loading_Screen({Key? key}) : super(key: key);
+  // Data_user dataUser = Data_user();
+  // Data_profile dataProfile = Data_profile();
+  // Data_account dataAccout = Data_account();
+  String id;
+  Loading_Screen(this.id);
 
   @override
   _Loading_ScreenState createState() => _Loading_ScreenState();
@@ -27,7 +33,7 @@ class _Loading_ScreenState extends State<Loading_Screen> with SingleTickerProvid
     Timer(Duration(milliseconds: 5700), (){
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Main_Activity()),
+          MaterialPageRoute(builder: (context) => Main_Activity(widget.id,0)),
               (route) => false);
     });
     super.initState();

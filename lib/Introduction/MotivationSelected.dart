@@ -9,7 +9,11 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 bool ceknotif = false;
 
 class PageMotivation extends StatelessWidget {
-  const PageMotivation({Key? key}) : super(key: key);
+  String gender;
+  String level;
+  String goal;
+
+  PageMotivation(this.gender,this.level,this.goal);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,7 @@ class PageMotivation extends StatelessWidget {
             return Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage("asset/Image/bgIntroScreen4.png"),
+                      image: AssetImage("asset/Image/BackgroundIntroduction/bgIntroScreen4.png"),
                       fit: BoxFit.cover
                   )
               ),
@@ -29,7 +33,7 @@ class PageMotivation extends StatelessWidget {
                   Container(
                     alignment: Alignment.topCenter,
                     padding: EdgeInsets.only(top: 5.6.h),
-                    child: Image.asset("asset/Image/pagination4.png",width: 44.5.w,height: 2.8.h,),
+                    child: Image.asset("asset/Image/Pagination/pagination4.png",width: 44.5.w,height: 2.8.h,),
                   ),
                   Container(
                     alignment: Alignment.topCenter,
@@ -37,11 +41,11 @@ class PageMotivation extends StatelessWidget {
                     child: Text("What motivates you to\nExercises?",style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.8),
                       fontFamily: 'PoppinsBoldSemi',
-                      fontSize: 19.7.sp,
+                      fontSize: 19.5.sp,
                     ),
                       textAlign: TextAlign.center,),
                   ),
-                  Motivation_Selected()
+                  Motivation_Selected(gender,level,goal)
                 ],
               ),
             );
@@ -52,6 +56,12 @@ class PageMotivation extends StatelessWidget {
 
 
 class Motivation_Selected extends StatefulWidget {
+
+  String gender;
+  String level;
+  String goal;
+
+  Motivation_Selected(this.gender,this.level,this.goal);
 
   @override
   _Motivation_Selected createState() => _Motivation_Selected();
@@ -348,7 +358,7 @@ class _Motivation_Selected extends State<Motivation_Selected> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                padding: EdgeInsets.only(bottom: 5.05.h),
+                padding: EdgeInsets.only(bottom: 6.55.h),
                 child: ElevatedButton(onPressed: () {
 
                   if(cekin() == true){
@@ -366,7 +376,7 @@ class _Motivation_Selected extends State<Motivation_Selected> {
                                   end: Offset.zero,).animate(animation),
                                 child: child,);
                             },
-                            pageBuilder: (context,animation,animationTime) => PageTarget()));
+                            pageBuilder: (context,animation,animationTime) => PageTarget(widget.gender,widget.level,widget.goal)));
                   }
                 },
                   child: Text("Continue",style:

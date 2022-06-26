@@ -5,8 +5,6 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pain/Introduction/GenderSelected.dart';
-import 'package:pain/Introduction/test.dart';
-import 'package:pain/Introduction/testfile.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'GoalSelected.dart';
@@ -14,7 +12,9 @@ import 'GoalSelected.dart';
 bool cek = false;
 
 class PagePhysically extends StatelessWidget {
-  const PagePhysically({Key? key}) : super(key: key);
+
+  String gender;
+  PagePhysically(this.gender);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class PagePhysically extends StatelessWidget {
             return Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage("asset/Image/bgIntroScreen2.png"),
+                      image: AssetImage("asset/Image/BackgroundIntroduction/bgIntroScreen2.png"),
                       fit: BoxFit.cover
                   )
               ),
@@ -34,7 +34,7 @@ class PagePhysically extends StatelessWidget {
                   Container(
                     alignment: Alignment.topCenter,
                     padding: EdgeInsets.only(top: 5.6.h),
-                    child: Image.asset("asset/Image/pagination2.png",width: 44.5.w,height: 2.8.h,),
+                    child: Image.asset("asset/Image/Pagination/pagination2.png",width: 44.5.w,height: 2.8.h,),
                   ),
                   Container(
                     alignment: Alignment.topCenter,
@@ -42,11 +42,11 @@ class PagePhysically extends StatelessWidget {
                     child: Text("How physically Active\nare you?",style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.9),
                       fontFamily: 'PoppinsBoldSemi',
-                      fontSize: 19.7.sp,
+                      fontSize: 19.5.sp,
                     ),
                       textAlign: TextAlign.center,),
                   ),
-                  Physically_Selected()
+                  Physically_Selected(gender)
                 ],
               ),
             );
@@ -58,6 +58,8 @@ class PagePhysically extends StatelessWidget {
 
 class Physically_Selected extends StatefulWidget {
 
+  String gender;
+  Physically_Selected(this.gender);
 
 
   @override
@@ -69,6 +71,9 @@ class _Physically_SelectedState extends State<Physically_Selected> {
   bool onetotwo = false;
   bool threetofour = false;
   bool fivemore = false;
+
+  String level = "";
+
 
   bool cek(){
     if (notmuch == true || onetotwo == true || threetofour == true || fivemore == true){
@@ -93,13 +98,15 @@ class _Physically_SelectedState extends State<Physically_Selected> {
               Container(
                 child: ElevatedButton(
                   onPressed: (){
+                    setState(() {
+                      level = "new";
+                    });
                     if (notmuch == false){
                       setState(() {
                         notmuch = true;
                         threetofour = false;
                         onetotwo = false;
                         fivemore = false;
-                        gender_selected().test = true;
                       });
                     }
                     else{
@@ -119,7 +126,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                           child: Text('Not much',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                                fontFamily: 'RubikBold',
+                                fontFamily: 'RubikSemiBold',
                                 fontSize: 18.sp,
                                 color: notmuch == true ? Color.fromRGBO(10, 12, 13, 0.8) : Color.fromRGBO(255, 255, 255, 0.8)
                             ),),),
@@ -141,7 +148,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                           borderRadius: BorderRadius.circular(20)
                       ),
                       primary: notmuch == true ? Color.fromRGBO(255, 255, 255, 0.8) : Color.fromRGBO(10, 12, 13, 0.8),
-                      padding: EdgeInsets.symmetric(vertical: 2.35.h)
+                      padding: EdgeInsets.symmetric(vertical: 2.5.h)
                   ),
                 ),),
 
@@ -149,6 +156,9 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                 padding: EdgeInsets.only(top: 2.35.h),
                 child: ElevatedButton(
                   onPressed: (){
+                    setState(() {
+                      level = "new";
+                    });
                     if (onetotwo == false){
                       setState(() {
                         onetotwo = true;
@@ -174,7 +184,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                           child: Text('1-2 Workouts',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                                fontFamily: 'RubikBold',
+                                fontFamily: 'RubikSemiBold',
                                 fontSize: 18.sp,
                                 color: onetotwo == false ? Color.fromRGBO(255, 255, 255, 0.8) : Color.fromRGBO(10, 12, 13, 0.8)
                             ),),),
@@ -196,7 +206,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                           borderRadius: BorderRadius.circular(20)
                       ),
                       primary: onetotwo == false ? Color.fromRGBO(10, 12, 13, 0.8) : Color.fromRGBO(255, 255, 255, 0.8),
-                      padding: EdgeInsets.symmetric(vertical: 2.35.h)
+                      padding: EdgeInsets.symmetric(vertical: 2.5.h)
                   ),
                 ),),
 
@@ -204,6 +214,9 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                 padding: EdgeInsets.only(top: 2.35.h),
                 child: ElevatedButton(
                   onPressed: (){
+                    setState(() {
+                      level = "pro";
+                    });
                     if (threetofour == false){
                       setState(() {
                         threetofour = true;
@@ -229,7 +242,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                           child: Text('3-4 Workouts',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                                fontFamily: 'RubikBold',
+                                fontFamily: 'RubikSemiBold',
                                 fontSize: 18.sp,
                                 color: threetofour == false ? Color.fromRGBO(255, 255, 255, 0.8) : Color.fromRGBO(10, 12, 13, 0.8)
                             ),),),
@@ -251,7 +264,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                           borderRadius: BorderRadius.circular(20)
                       ),
                       primary: threetofour == false ? Color.fromRGBO(10, 12, 13, 0.8) : Color.fromRGBO(255, 255, 255, 0.8),
-                      padding: EdgeInsets.symmetric(vertical: 2.35.h)
+                      padding: EdgeInsets.symmetric(vertical: 2.5.h)
                   ),
                 ),),
 
@@ -259,6 +272,9 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                 padding: EdgeInsets.only(top: 2.35.h),
                 child: ElevatedButton(
                   onPressed: (){
+                    setState(() {
+                      level = "master";
+                    });
                     if (fivemore == false){
                       setState(() {
                         fivemore = true;
@@ -284,7 +300,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                           child: Text('5+ Workouts',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                                fontFamily: 'RubikBold',
+                                fontFamily: 'RubikSemiBold',
                                 fontSize: 18.sp,
                                 color: fivemore == false ? Color.fromRGBO(255, 255, 255, 0.8) : Color.fromRGBO(10, 12, 13, 0.8)
                             ),),),
@@ -306,7 +322,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                           borderRadius: BorderRadius.circular(20)
                       ),
                       primary: fivemore == false ? Color.fromRGBO(10, 12, 13, 0.8) : Color.fromRGBO(255, 255, 255, 0.8),
-                      padding: EdgeInsets.symmetric(vertical: 2.35.h)
+                      padding: EdgeInsets.symmetric(vertical: 2.5.h)
                   ),
                 ),),
 
@@ -320,7 +336,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                padding: EdgeInsets.only(bottom: 5.05.h),
+                padding: EdgeInsets.only(bottom: 6.55.h),
                 child: ElevatedButton(onPressed: () {
 
                   if (cek() == true){
@@ -338,7 +354,7 @@ class _Physically_SelectedState extends State<Physically_Selected> {
                                   end: Offset.zero,).animate(animation),
                                 child: child,);
                             },
-                            pageBuilder: (context,animation,animationTime) => PageGoal()));
+                            pageBuilder: (context,animation,animationTime) => PageGoal(widget.gender,level)));
                   }
 
                 },

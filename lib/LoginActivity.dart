@@ -1,8 +1,11 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'Introduction/GenderSelected.dart';
 import 'LoadingScreen.dart';
 
@@ -12,20 +15,19 @@ class LoginActivtyy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("${MediaQuery.of(context).size.width} dan ${MediaQuery.of(context).size.height}");
     return Scaffold(
         backgroundColor: Color.fromRGBO(10, 12, 13, 1),
         body: ScreenUtilInit(
           designSize: Size(423,897),
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (BuildContext context) {
+          builder: (BuildContext context,widget) {
             return Container(
               child: ListView(
                 children: [
                   Container(
                     alignment: Alignment.topLeft,
-                    padding: EdgeInsets.only(left: 32.w,top: 24.h,bottom: 16.h),
+                    padding: EdgeInsets.only(left: 32.w,top: 22.h,bottom: 18.h),
                     child: Image.asset("asset/Image/Group_35.png",
                       width: 57.w,
                       height: 29.h,
@@ -33,26 +35,26 @@ class LoginActivtyy extends StatelessWidget {
                   ),
                   Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(top: 42.h),
+                    padding: EdgeInsets.only(top: 8.h),
                     child: Text("Login",style:
                     TextStyle(
-                        fontFamily: 'PoppinsBold',
-                        fontSize: 24.sp,
+                        fontFamily: 'PoppinsBoldSemi',
+                        fontSize: 27.3.sp,
                         color: Color.fromRGBO(255, 255, 255, 0.8)
                     ),),
                   ),
                   Container(
                     alignment: Alignment.center,
-                    // padding: EdgeInsets.only(top: 42),
+                    padding: EdgeInsets.only(top: 8),
                     child: Text("Sign in to your Account",style:
                     TextStyle(
-                        fontFamily: 'PoppinsRegular',
-                        fontSize: 20.sp,
-                        color: Color.fromRGBO(255, 255, 255, 0.8)
+                        fontFamily: 'RubikLight',
+                        fontSize: 23.5.sp,
+                        color: Color.fromRGBO(255, 255, 255, 0.8),
                     ),),
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 32.w,right: 32.w,top: 32.h),
+                    padding: EdgeInsets.only(left: 34.w,right: 34.w,top: 40.h),
                     child: Login_Activity(),
                   ),
 
@@ -98,6 +100,33 @@ class _Login_ActivityState extends State<Login_Activity> {
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(email);
   }
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
+  bool exist = false;
+  String email = "";
+  String pass = "";
+  String id = "";
+  database() async {
+      final snap = await ref.get();
+      for(var child in snap.children){
+        var user = child.child("user").value.toString();
+        if (user == textUser.text){
+          setState(() {
+            exist = true;
+            email = child.child("email").value.toString();
+            pass = child.child("pass").value.toString();
+            id = child.key.toString();
+          });
+          break;
+        }
+      }
+      log(exist.toString());
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +145,7 @@ class _Login_ActivityState extends State<Login_Activity> {
                 });
               }
               else{
+                database();
                 setState(() {
                   textuser = true;
                 });
@@ -152,7 +182,7 @@ class _Login_ActivityState extends State<Login_Activity> {
           ),
         ),
         Container(
-          padding: EdgeInsets.only(top: 24.h),
+          padding: EdgeInsets.only(top: 28.h),
           child: TextField(
 
             keyboardType: TextInputType.text,
@@ -232,30 +262,53 @@ class _Login_ActivityState extends State<Login_Activity> {
             ),),
         ),
         Container(
-          padding: EdgeInsets.only(top: 292.h),
+          padding: EdgeInsets.only(top: 304.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
                 padding: EdgeInsets.only(bottom: 16.h),
-                child: ElevatedButton(onPressed: () {
-                  log("${MediaQuery.of(context).size.width} dan ${MediaQuery.of(context).size.height}");
+                child: ElevatedButton(onPressed: (){
                   if (cek() == true){
-                    Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                            transitionDuration: Duration(milliseconds: 450),
-                            transitionsBuilder:
-                                (context,animation,animationTime,child){
-                              animation = CurvedAnimation(parent: animation, curve: Curves.ease);
-                              return SlideTransition(
-                                position: Tween(
-                                  begin: Offset(1,0),
-                                  end: Offset.zero,).animate(animation),
-                                child: child,);
-                            },
-                            pageBuilder: (context,animation,animationTime) => Loading_Screen()));
+                    FirebaseAuth _auth = FirebaseAuth.instance;
+                    if (exist == true){
+                      if(pass == textPass.text){
+                        _auth.signInWithEmailAndPassword(
+                            email: email,
+                            password: textPass.text).whenComplete(()
+                        => Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                                transitionDuration: Duration(milliseconds: 450),
+                                transitionsBuilder:
+                                    (context,animation,animationTime,child){
+                                  animation = CurvedAnimation(parent: animation, curve: Curves.ease);
+                                  return SlideTransition(
+                                    position: Tween(
+                                      begin: Offset(1,0),
+                                      end: Offset.zero,).animate(animation),
+                                    child: child,);
+                                },
+                                pageBuilder: (context,animation,animationTime) => Loading_Screen(id))));
+                      }
+                      else{
+                        Fluttertoast.showToast(
+                            msg: "Wrong Password",  // message
+                            toastLength: Toast.LENGTH_SHORT, // length
+                            gravity: ToastGravity.BOTTOM,    // location
+                            timeInSecForIosWeb: 1               // duration
+                        );
+                      }
+                    }
+                    else{
+                      Fluttertoast.showToast(
+                          msg: "Username not found",  // message
+                          toastLength: Toast.LENGTH_SHORT, // length
+                          gravity: ToastGravity.BOTTOM,    // location
+                          timeInSecForIosWeb: 1               // duration
+                      );
+                    }
                   }
                 },
 
@@ -268,7 +321,7 @@ class _Login_ActivityState extends State<Login_Activity> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 22.h),
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
                     primary: cek()
                         == false ? Color.fromRGBO(205, 2, 27, 0.5) : Color.fromRGBO(170, 5, 27, 1),
                     onPrimary: Color.fromRGBO(0, 0, 0, 1.0),

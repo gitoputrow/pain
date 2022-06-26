@@ -6,20 +6,118 @@ class Workout_List extends StatefulWidget {
 
   String nameDays = "";
   String ImageSource = "";
-  List <String> workoutList = [];
+  String username = "";
 
-  Workout_List(this.nameDays,this.ImageSource,this.workoutList);
+  Workout_List(this.nameDays,this.ImageSource,this.username);
 
   @override
-  _Workout_ListState createState() => _Workout_ListState("workout${nameDays.replaceAll(' ', '')}",workoutList);
+  _Workout_ListState createState() => _Workout_ListState();
 }
 
 class _Workout_ListState extends State<Workout_List> {
 
-  String nameListWo = "";
   List <String> workoutList = [];
 
-  _Workout_ListState(this.nameListWo,this.workoutList);
+  @override
+  void initState() {
+    if (widget.nameDays == "Full Body"){
+      workoutList = [
+        "Diamond Push Up",
+        "Squat",
+        "Crunch Sit Up",
+        "Modified V Ups"
+      ];
+    }
+    else if (widget.nameDays == "Abs"){
+      workoutList = [
+        "Crunch Sit Up",
+        "Sit Up",
+        "Leg Raise",
+        "Modified V Ups"
+      ];
+    }
+    else if (widget.nameDays == "Abs and Chest"){
+      workoutList = [
+        "Crunch Sit Up",
+        "Push Up",
+        "Leg Raise",
+        "Incline Push Up"
+      ];
+    }
+    else if (widget.nameDays == "Abs and Arm"){
+      workoutList = [
+        "Crunch Sit Up",
+        "Push Up",
+        "Leg Raise",
+        "Tricep Dips"
+      ];
+    }
+    else if (widget.nameDays == "Abs and Legs"){
+      workoutList = [
+        "Crunch Sit Up",
+        "Squat",
+        "Leg Raise",
+        "Leg Calf Raise"
+      ];
+    }
+    else if (widget.nameDays == "Chest"){
+      workoutList = [
+        "Diamond Push Up",
+        "Incline Push Up",
+        "Push Up",
+        "Wide Push Up"
+      ];
+    }
+    else if (widget.nameDays == "Chest and Legs"){
+      workoutList = [
+        "Push Up",
+        "Incline Push Up",
+        "Squat",
+        "Leg Calf Raise"
+      ];
+    }
+    else if (widget.nameDays == "Arm"){
+      workoutList = [
+        "Push Up",
+        "Tricep Dips",
+        "Mountain Climber",
+        "Shoulder Tap"
+      ];
+    }else if (widget.nameDays == "Arm and Chest"){
+      workoutList = [
+        "Push Up",
+        "Tricep Dips",
+        "Shoulder Tap",
+        "Incline Push Up"
+      ];
+    }
+    else if (widget.nameDays == "Arm and Legs"){
+      workoutList = [
+        "Squat",
+        "Tricep Dips",
+        "Shoulder Tap",
+        "Leg Calf Raise"
+      ];
+    }
+    else if (widget.nameDays == "Legs"){
+      workoutList = [
+        "Leg Calf Raise",
+        "Squat",
+        "Lunges",
+        "Step Ups and Down"
+      ];
+    }
+    else if (widget.nameDays == "Cardio"){
+      workoutList = [
+        "High Knee",
+        "Mountain Climber",
+        "Jumping Jack",
+        "Burpie"
+      ];
+    }
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +140,7 @@ class _Workout_ListState extends State<Workout_List> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(24),bottomRight: Radius.circular(24)),
                                   image: DecorationImage(
-                                      image: AssetImage("asset/Image/${widget.ImageSource}.png"),
+                                      image: AssetImage("asset/Image/CarouselPic/${widget.ImageSource}.png"),
                                       fit: BoxFit.cover
                                   )
                               ),
@@ -53,7 +151,7 @@ class _Workout_ListState extends State<Workout_List> {
                                   icon: Image.asset("asset/Image/backwo.png"),
                                   iconSize: 40,
                                   onPressed: (){
-
+                                    Navigator.pop(context);
                                   },
                                 ),
                               ),
@@ -64,7 +162,7 @@ class _Workout_ListState extends State<Workout_List> {
                               child: Text("${widget.nameDays}'s Day",
                                 style: TextStyle(
                                     fontFamily: 'RubikSemiBold',
-                                    fontSize: 21.8.sp,
+                                    fontSize: 21.sp,
                                     color: Colors.white
                                 ),),
                             ),
@@ -74,7 +172,7 @@ class _Workout_ListState extends State<Workout_List> {
                               child: Text("with 4 workouts",
                                 style: TextStyle(
                                     fontFamily: 'RubikLight',
-                                    fontSize: 15.8.sp,
+                                    fontSize: 15.5.sp,
                                     color: Colors.white
                                 ),),
                             ),
@@ -86,10 +184,10 @@ class _Workout_ListState extends State<Workout_List> {
                   ),
                   Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(bottom: 3.8.h),
+                    padding: EdgeInsets.only(bottom: 3.8.h,left: 24.w,right: 24.w),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Container(
                           child: ElevatedButton(onPressed: () {
@@ -108,18 +206,18 @@ class _Workout_ListState extends State<Workout_List> {
                                           end: Offset.zero,).animate(animation),
                                         child: child,);
                                     },
-                                    pageBuilder: (context,animation,animationTime) => Prepare_page("${widget.nameDays}",workoutList)));
+                                    pageBuilder: (context,animation,animationTime) => Prepare_page("${widget.nameDays}",workoutList,widget.username)));
 
                           },
-                            child: Text("START",style:
-                            TextStyle(fontSize: 16.sp,
+                            child: Text("Start",style:
+                            TextStyle(fontSize: 17.05.sp,
                                 fontFamily: 'RubikSemiBold',
                                 color: Colors.white  ),),
                             style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)
                                 ),
-                                padding: EdgeInsets.symmetric(vertical: 2.h,horizontal: 23.w),
+                                padding: EdgeInsets.symmetric(vertical: 2.h),
                                 primary: Color.fromRGBO(170, 5, 27, 1),
                                 onPrimary: Color.fromRGBO(0, 0, 0, 1.0)
                             ),),
@@ -149,7 +247,10 @@ class workoutlistt extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              color: Color.fromRGBO(196, 196, 196, 1),
+              image: DecorationImage(
+                  image: AssetImage("asset/Image/ListGif/${nama_workout.replaceAll(" ", "")}.gif"),
+                  fit: BoxFit.cover
+              ),
             ),
             height: 10.55.h,
             width: 21.28.w,
@@ -164,7 +265,7 @@ class workoutlistt extends StatelessWidget {
                   child: Text("$nama_workout",
                     style: TextStyle(
                         fontFamily: 'RubikMedium',
-                        fontSize: 18.9.sp,
+                        fontSize: 18.5.sp,
                         color: Colors.white
                     ),),
                 ),
@@ -173,7 +274,7 @@ class workoutlistt extends StatelessWidget {
                   child: Text("X 6",
                     style: TextStyle(
                         fontFamily: 'RubikLight',
-                        fontSize: 18.9.sp,
+                        fontSize: 18.sp,
                         color: Colors.white
                     ),),
                 )

@@ -57,7 +57,7 @@ class _Rest_PageState extends State<Rest_Page> with SingleTickerProviderStateMix
                       "Rest",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 27.sp,
+                        fontSize: 24.sp,
                         fontFamily: 'RubikMedium',
                       ),
                     ),
@@ -84,7 +84,7 @@ class _Rest_PageState extends State<Rest_Page> with SingleTickerProviderStateMix
                           "01:0${second-60}",
                           style: TextStyle(
                               fontFamily: 'RubikMedium',
-                              fontSize: 40,
+                              fontSize: 27.sp,
                               color: Color.fromRGBO(205, 5, 27, 1)
                           ),
                         ),
@@ -98,7 +98,7 @@ class _Rest_PageState extends State<Rest_Page> with SingleTickerProviderStateMix
                         "01:${second-60}",
                         style: TextStyle(
                             fontFamily: 'RubikMedium',
-                            fontSize: 24.5.sp,
+                            fontSize: 27.sp,
                             color: Color.fromRGBO(205, 5, 27, 1)
                         ),
                       ),
@@ -113,7 +113,7 @@ class _Rest_PageState extends State<Rest_Page> with SingleTickerProviderStateMix
                           "00:$second",
                           style: TextStyle(
                               fontFamily: 'RubikMedium',
-                              fontSize: 24.5.sp,
+                              fontSize: 27.sp,
                               color: Color.fromRGBO(205, 5, 27, 1)
                           ),
                         ),
@@ -127,13 +127,13 @@ class _Rest_PageState extends State<Rest_Page> with SingleTickerProviderStateMix
                         "00:0$second",
                         style: TextStyle(
                             fontFamily: 'RubikMedium',
-                            fontSize: 24.5.sp,
+                            fontSize: 27.sp,
                             color: Color.fromRGBO(205, 5, 27, 1)
                         ),
                       ),
                     ),
                   Container(
-                    padding: EdgeInsets.only(left: 11.8.w,right: 11.8.w,top: 5.h),
+                    padding: EdgeInsets.only(left: 11.8.w,right: 11.8.w,top: 4.h),
                     alignment: Alignment.center,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -154,13 +154,13 @@ class _Rest_PageState extends State<Rest_Page> with SingleTickerProviderStateMix
                                 },
                                   child: Text("+10s",style:
                                   TextStyle(fontSize: 16.sp,
-                                      fontFamily: 'RubikSemiBold',
+                                      fontFamily: 'RubikMedium',
                                       color: Colors.black  ),),
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(30)
                                       ),
-                                      padding: EdgeInsets.symmetric(vertical: 1.6.h,),
+                                      padding: EdgeInsets.symmetric(vertical: 1.8.h,),
                                       primary: Colors.white,
                                       onPrimary: Color.fromRGBO(0, 0, 0, 1.0)
                                   ),),
@@ -180,15 +180,15 @@ class _Rest_PageState extends State<Rest_Page> with SingleTickerProviderStateMix
                                   Navigator.pop(context);
 
                                 },
-                                  child: Text("SKIP",style:
+                                  child: Text("Skip",style:
                                   TextStyle(fontSize: 16.sp,
-                                      fontFamily: 'RubikSemiBold',
+                                      fontFamily: 'RubikMedium',
                                       color: Colors.white  ),),
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(30)
                                       ),
-                                      padding: EdgeInsets.symmetric(vertical: 1.6.h,),
+                                      padding: EdgeInsets.symmetric(vertical: 1.8.h,),
                                       primary: Color.fromRGBO(170, 5, 27, 1),
                                       onPrimary: Color.fromRGBO(0, 0, 0, 1.0)
                                   ),),

@@ -1,16 +1,9 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:getwidget/components/card/gf_card.dart';
-import 'package:getwidget/components/radio/gf_radio.dart';
-import 'package:getwidget/size/gf_size.dart';
-import 'package:getwidget/types/gf_radio_type.dart';
 import 'package:pain/HomeScreen.dart';
-import 'package:pain/Introduction/FragmentValue.dart';
-import 'package:pain/Introduction/Introduction_Screen.dart';
+import 'package:pain/Introduction/DataUser.dart';
 import 'package:pain/Introduction/PhysicallySelected.dart';
-import 'package:pain/Introduction/testfile.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 
@@ -21,12 +14,12 @@ class PageGender extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color.fromRGBO(10, 12, 13, 100),
+        backgroundColor: Color.fromRGBO(10, 12, 13, 1),
         body: ResponsiveSizer(builder: (BuildContext , Orientation , ScreenType ) {
           return Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("asset/Image/bgIntroScreen1.png"),
+                    image: AssetImage("asset/Image/BackgroundIntroduction/bgIntroScreen1.png"),
                     fit: BoxFit.cover
                 )
             ),
@@ -35,7 +28,7 @@ class PageGender extends StatelessWidget {
                 Container(
                   alignment: Alignment.topCenter,
                   padding: EdgeInsets.only(top: 5.6.h),
-                  child: Image.asset("asset/Image/pagination1.png",width: 44.5.w,height: 2.8.h,),
+                  child: Image.asset("asset/Image/Pagination/pagination1.png",width: 44.5.w,height: 2.8.h,),
                 ),
                 Container(
                   alignment: Alignment.topCenter,
@@ -43,7 +36,7 @@ class PageGender extends StatelessWidget {
                   child: Text("What is your Gender?",style: TextStyle(
                     color: Color.fromRGBO(255, 255, 255, 0.8),
                     fontFamily: 'PoppinsBoldSemi',
-                    fontSize: 19.7.sp,
+                    fontSize: 19.5.sp,
                   ),),
                 ),
                 gender_selected()
@@ -59,7 +52,6 @@ class PageGender extends StatelessWidget {
 
 class gender_selected extends StatefulWidget {
 
-  bool test = false;
 
   @override
   _gender_selectedState createState() => _gender_selectedState();
@@ -69,6 +61,8 @@ class _gender_selectedState extends State<gender_selected> {
 
   bool male = false;
   bool female = false;
+
+  String gender = "";
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +77,9 @@ class _gender_selectedState extends State<gender_selected> {
                 Container(
                   child: ElevatedButton(
                     onPressed: (){
+                      setState(() {
+                        gender = "Male";
+                      });
                       if (female == true){
                         setState(() {
                           female = false;
@@ -121,6 +118,9 @@ class _gender_selectedState extends State<gender_selected> {
                   padding: EdgeInsets.only(top: 2.8.h),
                   child: ElevatedButton(
                     onPressed: (){
+                      setState(() {
+                        gender = "Female";
+                      });
                       if (male == true) {
                         setState(() {
                           male = false;
@@ -167,7 +167,7 @@ class _gender_selectedState extends State<gender_selected> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                padding: EdgeInsets.only(bottom: 5.05.h),
+                padding: EdgeInsets.only(bottom: 6.55.h),
                 child: ElevatedButton(onPressed: () {
 
                   if (male == true || female == true){
@@ -185,7 +185,7 @@ class _gender_selectedState extends State<gender_selected> {
                                   end: Offset.zero,).animate(animation),
                                 child: child,);
                             },
-                            pageBuilder: (context,animation,animationTime) => PagePhysically()));
+                            pageBuilder: (context,animation,animationTime) => PagePhysically(gender)));
                   }
 
                 },
